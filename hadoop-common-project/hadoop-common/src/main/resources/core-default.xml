@@ -24,7 +24,7 @@
 
 <configuration>
 
-<!--- global properties -->
+<!--- global properties 全局属性-->
 
 <property>
   <name>hadoop.common.configuration.version</name>
@@ -41,7 +41,9 @@
 <property>
   <name>io.native.lib.available</name>
   <value>true</value>
-  <description>Should native hadoop libraries, if present, be used.</description>
+  <description>Should native hadoop libraries, if present, be used.
+                                        是否使用本地库
+  </description>
 </property>
 
 <property>
@@ -51,15 +53,22 @@
   must extend org.apache.hadoop.http.FilterInitializer. The corresponding 
   Filter will be initialized. Then, the Filter will be applied to all user 
   facing jsp and servlet web pages.  The ordering of the list defines the 
-  ordering of the filters.</description>
+  ordering of the filters.
+  http服务器过滤链设置。
+     该属性的值可以是以逗号分隔的一组类。
+     该类必须继承org.apache.hadoop.http.FilterInitializer。
+      这些fliter用于所有使用jsp和servlet。
+  </description>
 </property>
 
-<!--- security properties -->
+<!--- security properties 安全属性-->
 
 <property>
   <name>hadoop.security.authorization</name>
   <value>false</value>
-  <description>Is service-level authorization enabled?</description>
+  <description>Is service-level authorization enabled?
+                                       是否启用服务级别授权
+  </description>
 </property>
 
 <property>
@@ -68,6 +77,7 @@
   <description>
     Indicates if administrator ACLs are required to access
     instrumentation servlets (JMX, METRICS, CONF, STACKS).
+    
   </description>
 </property>
 
@@ -75,6 +85,7 @@
   <name>hadoop.security.authentication</name>
   <value>simple</value>
   <description>Possible values are simple (no authentication), and kerberos
+       授权模式
   </description>
 </property>
 
@@ -91,6 +102,7 @@
     implementation, ShellBasedUnixGroupsMapping, is used.  This implementation 
     shells out to the Linux/Unix environment with the 
     <code>bash -c groups</code> command to resolve a list of groups for a user.
+           该类被用来映射用户的组
   </description>
 </property>
 
@@ -102,6 +114,7 @@
     containing the user->group mapping. When this duration has expired,
     then the implementation of the group mapping provider is invoked to get
     the groups of the user and then cached back.
+           配置用户->组映射缓存的有效条目数。
   </description>
 </property>
 
@@ -111,6 +124,7 @@
   <description>
     The URL of the LDAP server to use for resolving user groups when using
     the LdapGroupsMapping user to group mapping.
+          使用LDAP组映射用户组映射时，用于解决用户组的LDAP服务器的URL。
   </description>
 </property>
 
@@ -119,6 +133,7 @@
   <value>false</value>
   <description>
     Whether or not to use SSL when connecting to the LDAP server.
+           连接ldap server时是否使用ssl
   </description>
 </property>
 
@@ -128,6 +143,7 @@
   <description>
     File path to the SSL keystore that contains the SSL certificate required
     by the LDAP server.
+          包含LDAP服务器要求SSL证书的SSL密钥文件路径。
   </description>
 </property>
 
@@ -139,6 +155,8 @@
 
     IMPORTANT: This file should be readable only by the Unix user running
     the daemons.
+           该路径包含LDAP SSL密钥库的密码文件。
+           ！！！注意：该文件只有运行守护进程的用户才可以读取。
   </description>
 </property>
 
@@ -148,6 +166,7 @@
   <description>
     The distinguished name of the user to bind as when connecting to the LDAP
     server. This may be left blank if the LDAP server supports anonymous binds.
+           连接到 LDAP服务器时所绑定的专用用户名，如果LADP服务器允许匿名绑定，此处可空。
   </description>
 </property>
 
@@ -156,9 +175,10 @@
   <value></value>
   <description>
     The path to a file containing the password of the bind user.
-
+           包含绑定用户密码的文件
     IMPORTANT: This file should be readable only by the Unix user running
     the daemons.
+           ！！！注意：该文件只有运行守护进程的用户才可以读取。
   </description>
 </property>
 
@@ -168,6 +188,7 @@
   <description>
     The search base for the LDAP connection. This is a distinguished name,
     and will typically be the root of the LDAP directory.
+    LDAP连接的搜索基础，这是一个特别的名字，通常是LDAP目录的根目录。
   </description>
 </property>
 
@@ -180,6 +201,7 @@
     an LDAP server with a non-AD schema, this should be replaced with
     (&amp;(objectClass=inetOrgPerson)(uid={0}). {0} is a special string used to
     denote where the username fits into the filter.
+    
   </description>
 </property>
 
@@ -252,6 +274,9 @@
       authentication means authentication only and no integrity or privacy; 
       integrity implies authentication and integrity are enabled; and privacy 
       implies all of authentication, integrity and privacy are enabled.
+                此字段为SASL安全连接的设置保护质量。可能的值有身份验证，完整性和保密性。
+	     身份认证意味着的只是身份认证不提供完整性和保密性;完整性意味着认证和完整性启用;
+	     和保密性意味着所有的身份验证，完整性和保密性都会被启用。
   </description>
 </property>
 
@@ -293,22 +318,33 @@
   <description>The size of buffer for use in sequence files.
   The size of this buffer should probably be a multiple of hardware
   page size (4096 on Intel x86), and it determines how much data is
-  buffered during read and write operations.</description>
+  buffered during read and write operations.
+      在使用sequence 文件时缓冲的大小。
+      该值应该是硬件页大小的整数倍。
+  hadoop在读写hdfs的文件，还有map的输出都用到了这个缓冲区容量
+      它决定了在一次读写操作时有多少数据被缓冲。
+  </description>
 </property>
   
 <property>
   <name>io.bytes.per.checksum</name>
   <value>512</value>
   <description>The number of bytes per checksum.  Must not be larger than
-  io.file.buffer.size.</description>
+  io.file.buffer.size.
+      在数据完整性检查时使用该参数。
+      必须比io.file.buffer.size参数小。
+      含义：对数据块中io.bytes.per.checksum个字节做一次CRC32，冗余检测。
+  </description>
 </property>
 
 <property>
   <name>io.skip.checksum.errors</name>
   <value>false</value>
   <description>If true, when a checksum error is encountered while
-  reading a sequence file, entries are skipped, instead of throwing an
-  exception.</description>
+      reading a sequence file, entries are skipped, instead of throwing an
+      exception.
+               如果为true，当在checksum sequence文件遇到错误时，跳过错误，而不是抛出异常。
+  </description>
 </property>
 
 <property>
@@ -317,7 +353,14 @@
   <description>A comma-separated list of the compression codec classes that can
   be used for compression/decompression. In addition to any classes specified
   with this property (which take precedence), codec classes on the classpath
-  are discovered using a Java ServiceLoader.</description>
+  are discovered using a Java ServiceLoader.
+      编解码器列表,用来压缩和解压缩。
+     设置压缩和解压的方式,常用的压缩算法有 gzip，lzo，snappy等。
+  org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.GzipCodec,
+  org.apache.hadoop.io.compress.BZip2Codec,org.apache.hadoop.io.compress.SnappyCodec
+     使用lzo压缩算法，启用压缩后，与不用压缩相比，数据量能减少1/3，但时间减少的并不明显。
+      除非为此属性指定特定的类，否则使用Java ServiceLoader发现的classpath上的类。
+  </description>
 </property>
 
 <property>
@@ -331,14 +374,23 @@
   
   The value of "system-native" indicates that the default system
   library should be used.  To indicate that the algorithm should
-  operate entirely in Java, specify "java-builtin".</description>
+  operate entirely in Java, specify "java-builtin".
+  bzip2压缩解压缩时使用的本地库，该库既可以通过名称或完整路径名来指定。
+      在前者的情况下，该库位于通过动态连接器，通常是在搜索中的环境变量LD_LIBRARY_PATH指定的目录。
+  The value of "system-native" indicates that the default system
+  library should be used.  To indicate that the algorithm should
+  operate entirely in Java, specify "java-builtin".
+  “system-native”的值表示默认的系统库应该被使用
+  </description>
 </property>
 
 <property>
   <name>io.serializations</name>
   <value>org.apache.hadoop.io.serializer.WritableSerialization,org.apache.hadoop.io.serializer.avro.AvroSpecificSerialization,org.apache.hadoop.io.serializer.avro.AvroReflectSerialization</value>
   <description>A list of serialization classes that can be used for
-  obtaining serializers and deserializers.</description>
+  obtaining serializers and deserializers.
+      序列化工厂类列表,用来获取序列化器和反序列化器。
+  </description>
 </property>
 
 <property>
@@ -348,6 +400,8 @@
   data files during merge.  May be a comma-separated list of
   directories on different devices in order to spread disk i/o.
   Directories that do not exist are ignored.
+      该目录用于存储序列文件合并过程中产生的中间数据。为了分散磁盘i/o，可能会是逗号分隔的目录列表。
+      目录不存在则忽略。
   </description>
 </property>
 
@@ -356,7 +410,10 @@
   <value>0</value>
   <description>Number of index entries to skip between each entry.
   Zero by default. Setting this to values larger than zero can
-  facilitate opening large MapFiles using less memory.</description>
+  facilitate opening large MapFiles using less memory.
+       每个条目之间跳过索引条目的数量。缺省为零。
+       此设置为值大于零可以方便打开大映射文件使用更少的内存。
+  </description>
 </property>
 
 <property>
@@ -369,6 +426,9 @@
     in the index file. This is to allow for doing binary search later
     within the index file to look up records by their keys and get their
     closest positions in the data file.
+           映射文件包含两个文件 - 数据文件（元组）和索引文件（键）
+	每io.map.index.interval条记录写入数据文件时，一个条目（记录密钥key，数据文件的位置value）被写入到索引文件。
+	这是为了以后在索引文件中利用记录的键进行二进制查找，并获得在数据文件中与其最接近的位置。
   </description>
 </property>
 
@@ -381,14 +441,19 @@
   scheme and authority determine the FileSystem implementation.  The
   uri's scheme determines the config property (fs.SCHEME.impl) naming
   the FileSystem implementation class.  The uri's authority is used to
-  determine the host, port, etc. for a filesystem.</description>
+  determine the host, port, etc. for a filesystem.
+        默认的hdfs文件系统名称，uri的模式及授权决定了该文件系统的实现。
+        该URI的方式决定了配置属性（fs.SCHEME.impl）命名文件系统的实现类。
+        该URI的授权来确定主机，端口等的文件系统。
+  </description>
 </property>
 
 <property>
   <name>fs.default.name</name>
   <value>file:///</value>
-  <description>Deprecated. Use (fs.defaultFS) property
-  instead</description>
+  <description>Deprecated. Use (fs.defaultFS) property instead
+               不推荐使用，使用fs.defaultFS代替。
+  </description>
 </property>
 
 <property>
@@ -401,6 +466,14 @@
   side configuration is checked. If trash is enabled on the
   server side then the value configured on the server is
   used and the client configuration value is ignored.
+       过多少分钟后删除检查点
+       垃圾检查点时间间隔。单位：分钟。如果为0，该特性会失效。
+       文件废弃标识设定，0为禁用此功能。
+       该配置可配置在服务端也可配置在客户端
+       这个是开启hdfs文件删除自动转移到垃圾箱的选项，值为垃圾箱文件清除时间。
+       当hadoop执行rm后，会将文件move到当前文件夹下的.Trash目录下,
+       误删文件后，可以到对应的.Trash目录下恢复文件。
+       一般设置为1440，即一天。
   </description>
 </property>
 
@@ -413,6 +486,9 @@
   Every time the checkpointer runs it creates a new checkpoint 
   out of current and removes checkpoints created more than 
   fs.trash.interval minutes ago.
+       垃圾检查点的时间间隔，要小于或者等于fs.trash.interval值，
+       若为0，则此值与fs.trash.interval相同，
+       每次checkpointer运行，它创建一个新的检查点，并且删除fs.trash.interval分钟之前的检查点。
   </description>
 </property>
 
@@ -439,7 +515,9 @@
 <property>
   <name>fs.ftp.host</name>
   <value>0.0.0.0</value>
-  <description>FTP filesystem connects to this server</description>
+  <description>FTP filesystem connects to this server
+               连接到这台服务器的ftp文件系统
+  </description>
 </property>
 
 <property>
@@ -447,19 +525,24 @@
   <value>21</value>
   <description>
     FTP filesystem connects to fs.ftp.host on this port
+    ftp文件系统通过此端口连到fs.ftp.host
   </description>
 </property>
 
 <property>
   <name>fs.df.interval</name>
   <value>60000</value>
-  <description>Disk usage statistics refresh interval in msec.</description>
+  <description>Disk usage statistics refresh interval in msec.
+             磁盘使用情况的统计数据刷新间隔（毫秒）
+  </description>
 </property>
 
 <property>
   <name>fs.s3.block.size</name>
   <value>67108864</value>
-  <description>Block size to use when writing files to S3.</description>
+  <description>Block size to use when writing files to S3.
+                写数据到s3文件系统时，文件块的大小。
+  </description>
 </property>
 
 <property>
@@ -468,6 +551,7 @@
   <description>Determines where on the local filesystem the S3 filesystem
   should store files before sending them to S3
   (or after retrieving them from S3).
+       在发送到s3之前或者正在接收s3的文件时，临时文件应该存放到本地文件系统的哪个地方
   </description>
 </property>
 
@@ -476,6 +560,7 @@
   <value>4</value>
   <description>The maximum number of retries for reading or writing files to S3, 
   before we signal failure to the application.
+        在发送失败信号到应用程序之前，尝试读或写的最大次数。
   </description>
 </property>
 
@@ -483,6 +568,7 @@
   <name>fs.s3.sleepTimeSeconds</name>
   <value>10</value>
   <description>The number of seconds to sleep between each S3 retry.
+               每个s3重试之间sleep时间。单位：秒
   </description>
 </property>
 
@@ -494,6 +580,9 @@
   exit using a JVM shutdown hook. Setting this property to false disables this
   behavior. This is an advanced option that should only be used by server applications
   requiring a more carefully orchestrated shutdown sequence.
+        默认情况下，在使用一个JVM的关闭hook退出程序时，文件系统实例会自动关闭
+       设置此属性为false可以禁用这一行为。
+       这是一个应该只使用需要更精心打造关机顺序服务器应用程序的高级选项。
   </description>
 </property>
 
@@ -501,14 +590,15 @@
   <name>fs.s3n.block.size</name>
   <value>67108864</value>
   <description>Block size to use when reading files using the native S3
-  filesystem (s3n: URIs).</description>
+  filesystem (s3n: URIs).
+        当读s3文件系统内的文件时，设置文件块的大小。
+  </description>
 </property>
 
 <property>
   <name>io.seqfile.compress.blocksize</name>
   <value>1000000</value>
-  <description>The minimum block size for compression in block compressed 
-          SequenceFiles.
+  <description>The minimum block size for compression in block compressed SequenceFiles.
   </description>
 </property>
 
@@ -517,6 +607,7 @@
   <value>true</value>
   <description>Should values of block-compressed SequenceFiles be decompressed
           only when necessary.
+                         必要时，块压缩的SequenceFiles 是否可以被压缩。
   </description>
 </property>
 
@@ -525,6 +616,7 @@
   <value>1000000</value>
   <description>The limit on number of records to be kept in memory in a spill 
           in SequenceFiles.Sorter
+                   保存在SequenceFiles.Sorter 中的分片在内存中应保存数目的限制。
   </description>
 </property>
 
@@ -536,6 +628,7 @@
   Larger values minimize the number of filters, which slightly increases the performance,
   but may waste too much space if the total number of keys is usually much smaller
   than this number.
+      
   </description>
 </property>
 
