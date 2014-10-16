@@ -29,6 +29,8 @@
   <description> If job tracker is static the history files are stored 
   in this single well known place. If No value is set here, by default,
   it is in the local file system at ${hadoop.log.dir}/history.
+      如果作业跟踪器是静态，历史文件应该被存储在单个熟知的地方。
+      如果没有值在此设置，默认情况下，它在本地文件系统中的${hadoop.log.dir}/history。
   </description>
 </property>
 
@@ -42,6 +44,10 @@
   by setting this property.  Higher values give more precision to the
   recorded data, but costs more memory in the job tracker at runtime.
   Each increment in this attribute costs 16 bytes per running task.
+     每个人物尝试都是进程从0到1的过程，
+     我们记录了每个任务尝试超过12个可能的范围
+     你可以改变我们设定了记录人物执行状态的间隔，
+     更高的数值可以获取更多的任务状态数据
   </description>
 </property>
 
@@ -51,7 +57,10 @@
   <description> User can specify a location to store the history files of 
   a particular job. If nothing is specified, the logs are stored in 
   output directory. The files are stored in "_logs/history/" in the directory.
-  User can stop logging by giving the value "none". 
+  User can stop logging by giving the value "none".
+     用户可以指定存储特定作业的历史记录文件的位置 
+     如果未设置，则日志被存储在输出目录，文件被存储在_logs/history/
+     设置none可以停止记录日志
   </description>
 </property>
 
@@ -61,6 +70,8 @@
   <description> The completed job history files are stored at this single well 
   known location. If nothing is specified, the files are stored at 
   ${mapreduce.jobtracker.jobhistory.location}/done.
+      已完成的job历史文件存储在此路径下，如果不设置存储在
+  ${mapreduce.jobtracker.jobhistory.location}/done.
   </description>
 </property>
 
@@ -68,7 +79,8 @@
   <name>mapreduce.job.committer.setup.cleanup.needed</name>
   <value>true</value>
   <description> true, if job needs job-setup and job-cleanup.
-                false, otherwise  
+                false, otherwise
+                如果作业需要作业建立及作业清理操作则设置为ture  
   </description>
 </property>
 <!-- i/o properties -->
@@ -77,7 +89,10 @@
   <name>mapreduce.task.io.sort.factor</name>
   <value>10</value>
   <description>The number of streams to merge at once while sorting
-  files.  This determines the number of open file handles.</description>
+  files.  This determines the number of open file handles.
+     排序文件时，一次合并文件流的数量。这就决定了打开的文件句柄数量。
+     排序文件的时候一次同时最多可并流的个数
+  </description>
 </property>
 
 <property>
@@ -85,7 +100,10 @@
   <value>100</value>
   <description>The total amount of buffer memory to use while sorting 
   files, in megabytes.  By default, gives each merge stream 1MB, which
-  should minimize seeks.</description>
+  should minimize seeks.
+  Task排序内部文件时，可用的内存缓冲区，单位MB
+      默认情况给每个合并流1MB空间
+  </description>
 </property>
 
 <property>
@@ -95,7 +113,12 @@
   thread will begin to spill the contents to disk in the background. Note that
   collection will not block if this threshold is exceeded while a spill is
   already in progress, so spills may be larger than this threshold when it is
-  set to less than .5</description>
+  set to less than .5
+     序列化缓冲的软限制。
+     当buffer中的数据达到这个阈值，后台线程会起来对buffer中已有的数据进行排序（spill），然后写入磁盘。
+     注意如果一个spill在进程中处理时（正在写入硬盘）即使阈值已经被超过，集合也不会阻塞。
+     所以spill文件大小有可能大于这个阈值，当将阈值设置为小于0.5
+  </description>
 </property>
 
 <property>
@@ -104,6 +127,8 @@
   <description>The host and port that the MapReduce job tracker runs
   at.  If "local", then jobs are run in-process as a single map
   and reduce task.
+   JT 运行的主机名及端口号
+   default时jobs作为单一的map和reduce人物运行在进程中。
   </description>
 </property>
 
@@ -111,7 +136,9 @@
   <name>mapreduce.local.clientfactory.class.name</name>
   <value>org.apache.hadoop.mapred.LocalClientFactory</value>
   <description>This the client factory that is responsible for 
-  creating local job runner client</description>
+  creating local job runner client
+     设置负责创建本地作业运行客户端的工厂类
+  </description>
 </property>
 
 <property>
@@ -120,6 +147,8 @@
   <description>
     The job tracker http server address and port the server will listen on.
     If the port is 0 then the server will start on a free port.
+           服务器监听的JT的http服务地址及端口
+           如果端口号为0，则会用一些空闲端口
   </description>
 </property>
 
@@ -129,6 +158,7 @@
   <description>
     The number of server threads for the JobTracker. This should be roughly
     4% of the number of tasktracker nodes.
+    JT的服务线程数，此值应该为TT节点数量的4%左右
   </description>
 </property>
 
@@ -138,7 +168,10 @@
   <description>The interface and port that task tracker server listens on. 
   Since it is only connected to by the tasks, it uses the local interface.
   EXPERT ONLY. Should only be changed if your host does not have the loopback 
-  interface.</description>
+  interface.
+  TT服务监听的接口及端口。由于它只能被人物连接，所以它用本地接口。
+  
+  </description>
 </property>
 
 <property>
