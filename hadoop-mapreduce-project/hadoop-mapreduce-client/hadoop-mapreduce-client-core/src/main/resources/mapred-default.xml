@@ -169,8 +169,8 @@
   Since it is only connected to by the tasks, it uses the local interface.
   EXPERT ONLY. Should only be changed if your host does not have the loopback 
   interface.
-  TT服务监听的接口及端口。由于它只能被人物连接，所以它用本地接口。
-  
+  TT服务监听的接口及端口。由于它只能被任务连接，所以它用本地接口。
+     只有当本机没有环回接口是才需要更改。
   </description>
 </property>
 
@@ -181,6 +181,8 @@
   data files.  May be a comma-separated list of
   directories on different devices in order to spread disk i/o.
   Directories that do not exist are ignored.
+      本地存放MapReduce中间数据文件的目录，可能是一个用逗号分割的在不同硬盘上的目录列表，
+      此举是为了分担磁盘i/o
   </description>
 </property>
 
@@ -188,6 +190,7 @@
   <name>mapreduce.jobtracker.system.dir</name>
   <value>${hadoop.tmp.dir}/mapred/system</value>
   <description>The directory where MapReduce stores control files.
+      此目录用于存储MR的控制文件
   </description>
 </property>
 
@@ -197,6 +200,7 @@
   <description>The root of the staging area for users' job files
   In practice, this should be the directory where users' home 
   directories are located (usually /user)
+      通常是用户job文件临时存储区域的根
   </description>
 </property>
 
@@ -204,6 +208,7 @@
   <name>mapreduce.cluster.temp.dir</name>
   <value>${hadoop.tmp.dir}/mapred/temp</value>
   <description>A shared directory for temporary files.
+      临时文件的共享目录
   </description>
 </property>
 
@@ -211,8 +216,9 @@
   <name>mapreduce.tasktracker.local.dir.minspacestart</name>
   <value>0</value>
   <description>If the space in mapreduce.cluster.local.dir drops under this, 
-  do not ask for more tasks.
-  Value in bytes.
+  do not ask for more tasks.Value in bytes.
+     如果mapreduce.cluster.local.dir的空间低于这一点，不再要求更多的Task。
+     以字节为单位。
   </description>
 </property>
 
@@ -225,6 +231,10 @@
     kill one of them, to clean up some space. Start with the reduce tasks,
     then go with the ones that have finished the least.
     Value in bytes.
+      如果mapreduce.cluster.local.dir的空间低于这一点，不再要求更多的Task，直到当前运行的
+  task已完成且已清除。当然为了保留某些task的正常运行，我们需要杀死他们其中的一个
+     开启reduce tasks时要保证所有的map tasks已完成。
+      以字节为单位。
   </description>
 </property>
 
@@ -233,6 +243,7 @@
   <value>600000</value>
   <description>Expert: The time-interval, in miliseconds, after which
   a tasktracker is declared 'lost' if it doesn't send heartbeats.
+    如果这个TT不发送心跳， 经过多长时间（单位毫秒）一个 TT会被标记为lost 如果这个TT不发送心跳。
   </description>
 </property>
 
@@ -240,6 +251,7 @@
   <name>mapreduce.tasktracker.instrumentation</name>
   <value>org.apache.hadoop.mapred.TaskTrackerMetricsInst</value>
   <description>Expert: The instrumentation class to associate with each TaskTracker.
+      与每个TT相关的类声明。
   </description>
 </property>
 
@@ -249,11 +261,13 @@
   <description>
    Name of the class whose instance will be used to query resource information
    on the tasktracker.
-   
+        此类的实例将用于TT查询资源信息
    The class must be an instance of 
    org.apache.hadoop.util.ResourceCalculatorPlugin. If the value is null, the
    tasktracker attempts to use a class appropriate to the platform. 
    Currently, the only platform supported is Linux.
+         此实例必须是一个org.apache.hadoop.util.ResourceCalculatorPlugin类实例，
+         若值为空，TT将会使用适合的平台类
   </description>
 </property>
 
@@ -263,6 +277,8 @@
   <description>The interval, in milliseconds, for which the tasktracker waits
    between two cycles of monitoring its tasks' memory usage. Used only if
    tasks' memory management is enabled via mapred.tasktracker.tasks.maxmemory.
+        监控他们任务内存使用情况的周期之间需要等待的时间间隔（单位毫秒），
+        只有当任务内存管理启用时，mapred.tasktracker.tasks.maxmemory，此值才有效
    </description>
 </property>
 
@@ -272,6 +288,8 @@
   <description>The time, in milliseconds, the tasktracker waits for sending a
   SIGKILL to a task, after it has been sent a SIGTERM. This is currently
   not used on WINDOWS where tasks are just sent a SIGTERM.
+  TT发送 SIGKILL 信号给task时需要等待的时间，TT已然发送了SIGTERM信号。
+     通常不用于windows因其只接受SIGTERM。
   </description>
 </property>
 
@@ -279,7 +297,8 @@
   <name>mapreduce.job.maps</name>
   <value>2</value>
   <description>The default number of map tasks per job.
-  Ignored when mapreduce.jobtracker.address is "local".  
+  Ignored when mapreduce.jobtracker.address is "local".
+      每个job的map数，若 mapreduce.jobtracker.address为local 则忽略此值。
   </description>
 </property>
 
@@ -290,6 +309,8 @@
   of the cluster's reduce capacity, so that if a node fails the reduces can 
   still be executed in a single wave.
   Ignored when mapreduce.jobtracker.address is "local".
+     默认每个job的reduce数，通常设置为集群reduce的99%，所以当某个节点失败时，这些reduces
+     仍可以执行。
   </description>
 </property>
 
@@ -298,6 +319,7 @@
   <value>false</value>
   <description>"true" to enable (job) recovery upon restart,
                "false" to start afresh
+               设为ture时，使得job恢复在重启时进行。
   </description>
 </property>
 
@@ -308,6 +330,8 @@
                uses job history, its important to dump job history to disk as 
                soon as possible. Note that this is an expert level parameter.
                The default value is set to 3 MB.
+               job历史文件块大小，因为job恢复要使用job历史，因此尽快的将job历史存入
+                                       硬盘非常重要，这是高手的配置（普通人别玩），默认值为3MB
   </description>
 </property>
 
@@ -324,6 +348,8 @@
   <description>The maximum permissible size of the split metainfo file. 
   The JobTracker won't attempt to read split metainfo files bigger than
   the configured value.
+      分割元信息文件时所允许的最大大小。
+      在JobTracker的不会尝试读取大于配置的分割了的元信息文件。
   No limits if set to -1.
   </description>
 </property>
@@ -333,6 +359,7 @@
   <value></value>
   <description>The maximum number of running tasks for a job before
   it gets preempted. No limits if undefined.
+         设置一个job在被允许执行前，最大可分配的task数量。
   </description>
 </property>
 
@@ -342,6 +369,7 @@
   <description>Expert: The maximum number of attempts per map task.
   In other words, framework will try to execute a map task these many number
   of times before giving up on it.
+  map task最大尝试次数，即在放弃此map task前会尝试执行的次数。
   </description>
 </property>
 
@@ -351,6 +379,7 @@
   <description>Expert: The maximum number of attempts per reduce task.
   In other words, framework will try to execute a reduce task these many number
   of times before giving up on it.
+  reduce task最大尝试次数，即在放弃此reduce task前会尝试执行的次数。
   </description>
 </property>
 
@@ -359,6 +388,7 @@
   <value>60000</value>
   <description>The maximum number of ms the reducer will delay before retrying
   to download map data.
+      reducer在尝试重新下载map结果数据时等待时间的上限。
   </description>
 </property>
 
@@ -367,6 +397,10 @@
   <value>5</value>
   <description>The default number of parallel transfers run by reduce
   during the copy(shuffle) phase.
+      这个参数决定把 map 输出复制到 reduce 所使用的线程数量。
+     增加这个值可以提高网络传输速度，加快复制 map 输出的过程，但是也会增加 CPU 使用量。
+      根据**经验，增加这个值的效果不太明显，建议只在 map 输出非常大的情况下增加这个值。
+   Reduce shuffle阶段copier线程数。默认是5，对于较大集群，可调整为16~25。
   </description>
 </property>
 
@@ -375,6 +409,7 @@
   <value>180000</value>
   <description>Expert: The maximum amount of time (in milli seconds) reduce
   task spends in trying to connect to a tasktracker for getting map output.
+  reduce task 为了获取map输出而尝试与TT联系所花费时间的最大值。
   </description>
 </property>
 
@@ -384,6 +419,7 @@
   <description>Expert: The maximum amount of time (in milli seconds) reduce
   task waits for map output data to be available for reading after obtaining
   connection.
+     在获得map连接后，reduce task等待map将结果准备好的最大时间。（毫秒）
   </description>
 </property>
 
@@ -393,6 +429,7 @@
   <description>The number of milliseconds before a task will be
   terminated if it neither reads an input, writes an output, nor
   updates its status string.  A value of 0 disables the timeout.
+       一个task多长时间 既不读又不写，而且不更新其状态，将会被终止。
   </description>
 </property>
 
@@ -401,6 +438,7 @@
   <value>2</value>
   <description>The maximum number of map tasks that will be run
   simultaneously by a task tracker.
+     一个TT能追踪同时运行的map task最大值
   </description>
 </property>
 
@@ -409,6 +447,7 @@
   <value>2</value>
   <description>The maximum number of reduce tasks that will be run
   simultaneously by a task tracker.
+   一个TT能追踪同时运行的reduce task最大值
   </description>
 </property>
 
@@ -416,6 +455,7 @@
   <name>mapreduce.jobtracker.retiredjobs.cache.size</name>
   <value>1000</value>
   <description>The number of retired job status to keep in the cache.
+              保存在cache中的重试job状态的数量
   </description>
 </property>
 
@@ -424,6 +464,7 @@
   <value>false</value>
   <description>Expert: Set this to true to let the tasktracker send an 
   out-of-band heartbeat on task-completion for better latency.
+       设置为ture时，为了获得更少的延时，可以让TT发送一个信号，表明task已完成。
   </description>
 </property>
 
@@ -432,6 +473,7 @@
   <value>5</value>
   <description>The number of job history files loaded in memory. The jobs are 
   loaded when they are first accessed. The cache is cleared based on LRU.
+      加载到内存的job历史文件数，这些工作是在第一次访问时加载，
   </description>
 </property>
 
@@ -439,13 +481,15 @@
   <name>mapreduce.jobtracker.instrumentation</name>
   <value>org.apache.hadoop.mapred.JobTrackerMetricsInst</value>
   <description>Expert: The instrumentation class to associate with each JobTracker.
+            每个JT相关的类声明。
   </description>
 </property>
 
 <property>
   <name>mapred.child.java.opts</name>
   <value>-Xmx200m</value>
-  <description>Java opts for the task tracker child processes.  
+  <description>Java opts for the task tracker child processes.
+      TT子线程的java设置  
   The following symbol, if present, will be interpolated: @taskid@ is replaced 
   by current TaskID. Any other occurrences of '@' will go unchanged.
   For example, to enable verbose gc logging to a file named for the taskid in
@@ -463,7 +507,9 @@
   <name>mapred.child.env</name>
   <value></value>
   <description>User added environment variables for the task tracker child 
-  processes. Example :
+  processes.
+    为TT子线程添加环境变量。 
+   Example :
   1) A=foo  This will set the env variable A to foo
   2) B=$B:c This is inherit nodemanager's B env variable on Unix.
   3) B=%B%;c This is inherit nodemanager's B env variable on Windows.
@@ -477,6 +523,7 @@
   map and reduce task processes. This is not an additive property.
   You must preserve the original value if you want your map and
   reduce tasks to have access to native libraries (compression, etc). 
+    添加 map reduce线程环境变量
   </description>
 </property>
 
@@ -489,6 +536,7 @@
   option -Djava.io.tmpdir='the absolute path of the tmp dir'. Pipes and
   streaming are set with environment variable,
    TMPDIR='the absolute path of the tmp dir'
+   map及reduce task 的临时目录，
   </description>
 </property>
 
@@ -513,6 +561,7 @@
   <value>1</value>
   <description>
       The number of virtual cores required for each map task.
+         每个map task 的虚拟cup数
   </description>
 </property>
 
@@ -521,6 +570,7 @@
   <value>1</value>
   <description>
       The number of virtual cores required for each reduce task.
+        每个reduce task 的虚拟cup数
   </description>
 </property>
 
