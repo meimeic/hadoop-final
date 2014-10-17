@@ -582,6 +582,7 @@
   we initiate the in-memory merge and spill to disk. A value of 0 or less than
   0 indicates we want to DON'T have any threshold and instead depend only on
   the ramfs's memory consumption to trigger the merge.
+    内存中合并线程开始合并文件数目的阈值，当内存中文件数达到阈值时，我们启动合并线程将文件spill到磁盘
   </description>
 </property>
 
@@ -592,6 +593,7 @@
   initiated, expressed as a percentage of the total memory allocated to
   storing in-memory map outputs, as defined by
   mapreduce.reduce.shuffle.input.buffer.percent.
+     使用阈值，当达到时开始内存合并，用百分比表示
   </description>
 </property>
 
@@ -600,6 +602,7 @@
   <value>0.70</value>
   <description>The percentage of memory to be allocated from the maximum heap
   size to storing map outputs during the shuffle.
+     在shuffle过程中可用于存储map 输出的内存百分比
   </description>
 </property>
 
@@ -617,7 +620,9 @@
   <name>mapreduce.reduce.shuffle.memory.limit.percent</name>
   <value>0.25</value>
   <description>Expert: Maximum percentage of the in-memory limit that a
-  single shuffle can consume</description>
+  single shuffle can consume
+     单一shuffle可用的内存限制的最大百分比。
+  </description>
 </property>
 
 <property>
@@ -625,6 +630,7 @@
   <value>false</value>
   <description>
     Whether to use SSL for for the Shuffle HTTP endpoints.
+    
   </description>
 </property>
 
@@ -632,6 +638,7 @@
   <name>mapreduce.shuffle.ssl.file.buffer.size</name>
   <value>65536</value>
   <description>Buffer size for reading spills from file when using SSL.
+        使用ssl时从文件读取spills到缓冲区的大小。
   </description>
 </property>
 
@@ -640,6 +647,7 @@
   <value>0</value>
   <description>Max allowed connections for the shuffle.  Set to 0 (zero)
                to indicate no limit on the number of connections.
+                shuffle的最大连接数（0表示无限制）
   </description>
 </property>
 
@@ -655,20 +663,26 @@
   <name>mapreduce.map.speculative</name>
   <value>true</value>
   <description>If true, then multiple instances of some map tasks 
-               may be executed in parallel.</description>
+               may be executed in parallel.
+                               一些map任务的多个实例可以并行执行。
+  </description>
 </property>
 
 <property>
   <name>mapreduce.reduce.speculative</name>
   <value>true</value>
   <description>If true, then multiple instances of some reduce tasks 
-               may be executed in parallel.</description>
+               may be executed in parallel.
+               一些reduce任务的多个实例可以并行执行。
+   </description>
 </property>
 <property>
   <name>mapreduce.job.speculative.speculativecap</name>
   <value>0.1</value>
   <description>The max percent (0-1) of running tasks that
-  can be speculatively re-executed at any time.</description>
+  can be speculatively re-executed at any time.
+        任何时刻可以预测性重新执行task的百分比
+  </description>
 </property>
 
 <property>
@@ -684,6 +698,8 @@
   <value>1.0</value>The number of standard deviations by which a task's 
   ave progress-rates must be lower than the average of all running tasks'
   for the task to be considered too slow.
+     通过标准数量来判断一个task的平均进度一定比所有正在运行的task进度的平均值低，
+     由此认定这个task太慢了。
   <description>
   </description>
 </property>
@@ -695,6 +711,7 @@
   Tracker's ave map and reduce progress-rates (finishTime-dispatchTime)
   must be lower than the average of all successful map/reduce task's for
   the TT to be considered too slow to give a speculative task to.
+  
   </description>
 </property>
 
@@ -702,7 +719,7 @@
   <name>mapreduce.job.jvm.numtasks</name>
   <value>1</value>
   <description>How many tasks to run per jvm. If set to -1, there is
-  no limit. 
+  no limit. 每个jvm运行task个数
   </description>
 </property>
 
@@ -722,6 +739,7 @@
   <description>Threshold for number of maps, beyond which job is considered
   too big for the ubertasking optimization.  Users may override this value,
   but only downward.
+  map阈值
   </description>
 </property>
 
@@ -732,6 +750,7 @@
   too big for the ubertasking optimization.  CURRENTLY THE CODE CANNOT SUPPORT
   MORE THAN ONE REDUCE and will ignore larger values.  (Zero is a valid max,
   however.)  Users may override this value, but only downward.
+  reduce阈值
   </description>
 </property>
 
@@ -743,6 +762,7 @@
   specified, dfs.block.size is used as a default.  Be sure to specify a
   default value in mapred-site.xml if the underlying filesystem is not HDFS.
   Users may override this value, but only downward.
+      输入阈值
   </description>
 </property>
 
@@ -751,14 +771,18 @@
   <value>0</value>
   <description>The minimum size chunk that map input should be split
   into.  Note that some file formats may have minimum split sizes that
-  take priority over this setting.</description>
+  take priority over this setting.
+      map 输入数据应被分成块的最小尺寸。请注意，某些文件格式可能有最低分割大小的优先级高于此设置。
+  </description>
 </property>
 
 <property>
   <name>mapreduce.jobtracker.maxtasks.perjob</name>
   <value>-1</value>
   <description>The maximum number of tasks for a single job.
-  A value of -1 indicates that there is no maximum.  </description>
+  A value of -1 indicates that there is no maximum.  
+     单个作业的最大task数。
+  </description>
 </property>
 
 <property>
@@ -766,6 +790,7 @@
   <value>10</value>
   <description>The replication level for submitted job files.  This
   should be around the square root of the number of nodes.
+       提交job文件的复制级别。
   </description>
 </property>
 
@@ -775,6 +800,7 @@
   <value>default</value>
   <description>The name of the Network Interface from which a task
   tracker should report its IP address.
+  TT应从哪个网络接口报告其ip地址。
   </description>
  </property>
  
@@ -784,6 +810,7 @@
   <description>The host name or IP address of the name server (DNS)
   which a TaskTracker should use to determine the host name used by
   the JobTracker for communication and display purposes.
+  dns的主机名或ip地址。TT利用这个DNS判断JT的主机名，以达到信息交流及展示的目的。
   </description>
  </property>
  
@@ -792,6 +819,7 @@
   <value>40</value>
   <description>The number of worker threads that for the http server. This is
                used for map output fetching
+               http服务的工作者线程数。这用于获取map输出。
   </description>
 </property>
 
