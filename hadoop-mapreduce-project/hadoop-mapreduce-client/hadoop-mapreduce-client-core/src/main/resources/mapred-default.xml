@@ -829,6 +829,7 @@
   <description>
     The task tracker http server address and port.
     If the port is 0 then the server will start on a free port.
+    TT的http服务地址及端口.
   </description>
 </property>
 
@@ -838,7 +839,10 @@
   <description>Should the files for failed tasks be kept. This should only be 
                used on jobs that are failing, because the storage is never
                reclaimed. It also prevents the map outputs from being erased
-               from the reduce directory as they are consumed.</description>
+               from the reduce directory as they are consumed.
+               失败task的文件是否保留，这只用于job失败时，因为保存已没有价值，
+              它还可以防止map输出在reduce目录删除，随着它们被使用后。
+               </description>
 </property>
 
 
@@ -855,6 +859,7 @@
   <name>mapreduce.output.fileoutputformat.compress</name>
   <value>false</value>
   <description>Should the job outputs be compressed?
+      job输出是否压缩
   </description>
 </property>
 
@@ -863,6 +868,7 @@
   <value>RECORD</value>
   <description>If the job outputs are to compressed as SequenceFiles, how should
                they be compressed? Should be one of NONE, RECORD or BLOCK.
+               如果job输出被压缩成序列文件，它们是如何压缩的，压缩类型。
   </description>
 </property>
 
@@ -870,6 +876,7 @@
   <name>mapreduce.output.fileoutputformat.compress.codec</name>
   <value>org.apache.hadoop.io.compress.DefaultCodec</value>
   <description>If the job outputs are compressed, how should they be compressed?
+                 压缩方法
   </description>
 </property>
 
@@ -878,6 +885,7 @@
   <value>false</value>
   <description>Should the outputs of the maps be compressed before being
                sent across the network. Uses SequenceFile compression.
+               map输出发送到网络前是否被压缩。
   </description>
 </property>
 
@@ -886,6 +894,7 @@
   <value>org.apache.hadoop.io.compress.DefaultCodec</value>
   <description>If the map outputs are compressed, how should they be 
                compressed?
+               如果被压缩，压缩方法。
   </description>
 </property>
 
@@ -893,6 +902,7 @@
   <name>map.sort.class</name>
   <value>org.apache.hadoop.util.QuickSort</value>
   <description>The default sort class for sorting keys.
+           默认用于存储key的存储类
   </description>
 </property>
 
@@ -900,6 +910,7 @@
   <name>mapreduce.task.userlog.limit.kb</name>
   <value>0</value>
   <description>The maximum size of user-logs of each task in KB. 0 disables the cap.
+           每个task的用户log最大值（KB），
   </description>
 </property>
 
@@ -908,6 +919,7 @@
   <value>24</value>
   <description>The maximum time, in hours, for which the user-logs are to be 
                retained after the job completion.
+               job完成后，用户log保留时间（小时）
   </description>
 </property>
 
@@ -916,7 +928,9 @@
   <value></value>
   <description>Names a file that contains the list of nodes that may
   connect to the jobtracker.  If the value is empty, all hosts are
-  permitted.</description>
+  permitted.
+       包含可连接至JobTracker的节点列表的文件
+  </description>
 </property>
 
 <property>
@@ -924,7 +938,9 @@
   <value></value>
   <description>Names a file that contains the list of hosts that
   should be excluded by the jobtracker.  If the value is empty, no
-  hosts are excluded.</description>
+  hosts are excluded.
+    包含禁止连接至JobTracker的节点列表的文件
+  </description>
 </property>
 
 <property>
@@ -933,6 +949,8 @@
   <description>Expert: Approximate number of heart-beats that could arrive 
                at JobTracker in a second. Assuming each RPC can be processed 
                in 10msec, the default value is made 100 RPCs in a second.
+               每秒可到达JT的心跳近似数，假定每个rpc可在10ms内处理。
+               
   </description>
 </property> 
 
@@ -944,6 +962,9 @@
                all jobs. The tracker will be given a tasks later
                (after a day). The tracker will become a healthy
                tracker after a restart.
+              如果tasktrack上有超过4次失败（mapreduce.job.maxtaskfailures.per.tracker 默认值：3次），
+     jobtracker将会把当前 tasktracker加入黑名单，不会再分配任务。
+              在这之前分配的工作任务可以继续使用，被加入黑名单的节点，重启后可以重新加入集群。
   </description>
 </property> 
 
@@ -955,6 +976,9 @@
                MUST be less than mapreduce.map.maxattempts and
                mapreduce.reduce.maxattempts otherwise the failed task will
                never be tried on a different node.
+               一个分配job的TT上task允许失败的次数，如果大于此值则该job的新task不会分配到这个节点上
+               这个值应小于mapreduce.map.maxattempts和 mapreduce.reduce.maxattempts否则这个失败的task
+               不会在另一个节点上运行。
   </description>
 </property>
 
@@ -965,6 +989,7 @@
                to the console of the JobClient. 
                The permissible options are: NONE, KILLED, FAILED, SUCCEEDED and 
                ALL.
+                                        用于控制该任务的userlogs的输出发送到JobClient的控制台的过滤器。
   </description>
 </property>
 
@@ -975,6 +1000,7 @@
     polls the JobTracker for updates about job status. You may want to set this
     to a lower value to make tests run faster on a single node system. Adjusting
     this value in production may lead to unwanted client-server traffic.
+          向客户端报告job进度的频率
     </description>
   </property>
 
@@ -985,6 +1011,7 @@
     reports status to the console and checks for job completion. You may want to set this
     to a lower value to make tests run faster on a single node system. Adjusting
     this value in production may lead to unwanted client-server traffic.
+           客户端向控制台报告状态即及检查。
     </description>
   </property>
 
@@ -993,6 +1020,7 @@
     <value>true</value>
     <description>Indicates if persistency of job status information is
       active or not.
+      job状态信息的持久化
     </description>
   </property>
 
@@ -1003,6 +1031,8 @@
     The job status information will be available after it drops of the memory
     queue and between jobtracker restarts. With a zero value the job status
     information is not persisted at all in DFS.
+    Job状态信息在DFS中保存的时间（单位小时），job的状态信息在其退出内存之后及重启JT之前
+           都是有效的.
   </description>
 </property>
 
@@ -1012,6 +1042,7 @@
     <description>The directory where the job status information is persisted
       in a file system to be available after it drops of the memory queue and
       between jobtracker restarts.
+                保存job状态信息的目录
     </description>
   </property>
 
@@ -1021,7 +1052,9 @@
     <description>To set whether the system should collect profiler
      information for some of the tasks in this job? The information is stored
      in the user log directory. The value is "true" if task profiling
-     is enabled.</description>
+     is enabled.
+               设置系统是否可以收集job的一些task的配置信息。这些信息存储在用户log目录里
+     </description>
   </property>
 
   <property>
@@ -1029,6 +1062,7 @@
     <value>0-2</value>
     <description> To set the ranges of map tasks to profile.
     mapreduce.task.profile has to be set to true for the value to be accounted.
+           设置map task的profile文件范围
     </description>
   </property>
 
@@ -1037,6 +1071,7 @@
     <value>0-2</value>
     <description> To set the ranges of reduce tasks to profile.
     mapreduce.task.profile has to be set to true for the value to be accounted.
+            设置reduce task的profile文件范围
     </description>
   </property>
 
@@ -1044,11 +1079,14 @@
     <name>mapreduce.task.skip.start.attempts</name>
     <value>2</value>
     <description> The number of Task attempts AFTER which skip mode 
-    will be kicked off. When skip mode is kicked off, the 
-    tasks reports the range of records which it will process 
-    next, to the TaskTracker. So that on failures, TT knows which 
-    ones are possibly the bad records. On further executions, 
+    will be kicked off.
+            跳跃模式启动前  task的尝试次数 
+    When skip mode is kicked off, the tasks reports the range of records which it will process 
+    next, to the TaskTracker. 
+            当跳跃模式开启后，task会将下次要处理的记录范围报告给TT
+    So that on failures, TT knows which ones are possibly the bad records. On further executions, 
     those are skipped.
+          所以当task失败时，TT会知道哪个是错误记录，在以后执行时这些记录会被跳过。
     </description>
   </property>
   
@@ -1057,9 +1095,12 @@
     <value>true</value>
     <description> The flag which if set to true, 
     SkipBadRecords.COUNTER_MAP_PROCESSED_RECORDS is incremented 
-    by MapRunner after invoking the map function. This value must be set to 
-    false for applications which process the records asynchronously 
-    or buffer the input records. For example streaming. 
+    by MapRunner after invoking the map function. 
+           设置为ture 则SkipBadRecords.COUNTER_MAP_PROCESSED_RECORDS值会在
+           调用map函数后被MapRunner增加。
+    This value must be set to false for applications which process the records asynchronously 
+    or buffer the input records. For example streaming.
+           对于异步处理记录或者缓冲写入记录的程序，此值必须为false。例如流 
     In such cases applications should increment this counter on their own.
     </description>
   </property>
@@ -1092,11 +1133,16 @@
     record PER bad record in mapper. The number includes the bad record as well.
     To turn the feature of detection/skipping of bad records off, set the 
     value to 0.
+    map中每个坏记录周围可跳过的记录数，这个值也包括这个坏记录。    
+           要关闭不良记录了检测/跳跃的功能，将值设置为0。
     The framework tries to narrow down the skipped range by retrying  
     until this threshold is met OR all attempts get exhausted for this task. 
     Set the value to Long.MAX_VALUE to indicate that framework need not try to 
     narrow down. Whatever records(depends on application) get skipped are 
     acceptable.
+            该框架试图通过重试，直到该阈值已达到或对这个task来说所有的尝试都已用过，来缩小跳过范围。
+             将该值设置为Long.MAX_VALUE，指示框架，不必试图缩小。
+              无论记录（取决于应用程序）是否跳跃都是可以接受的。
     </description>
   </property>
   
@@ -1107,6 +1153,7 @@
     group PER bad group in reducer. The number includes the bad group as well.
     To turn the feature of detection/skipping of bad groups off, set the 
     value to 0.
+    reduce中每个坏组周围可跳过的组数，这个值也包括这个坏组。    
     The framework tries to narrow down the skipped range by retrying  
     until this threshold is met OR all attempts get exhausted for this task. 
     Set the value to Long.MAX_VALUE to indicate that framework need not try to 
@@ -1119,6 +1166,7 @@
     <name>mapreduce.ifile.readahead</name>
     <value>true</value>
     <description>Configuration key to enable/disable IFile readahead.
+                       是否启用Ifile 预读。
     </description>
   </property>
 
