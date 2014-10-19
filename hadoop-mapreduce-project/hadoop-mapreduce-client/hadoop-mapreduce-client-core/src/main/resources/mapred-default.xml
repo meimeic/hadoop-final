@@ -1174,6 +1174,7 @@
     <name>mapreduce.ifile.readahead.bytes</name>
     <value>4194304</value>
     <description>Configuration key to set the IFile readahead length in bytes.
+                            设置预读字节数。 
     </description>
   </property>
   
@@ -1195,6 +1196,9 @@
     for the queue must allow the current user to submit a job to the queue.
     Before specifying a queue, ensure that the system is configured with 
     the queue, and access is allowed for submitting jobs to the queue.
+           提交作业队列，这必须符合在mapred-queues.xml中定义的一种，同样，此队列的访问控制列表
+           必须允许当前用户提交作业到作业队列，在制定队列前，请确保这个系统已经配置了这个队列，
+           并且允许提交job到此队列。
   </description>
 </property>
 
@@ -1211,6 +1215,7 @@
     Map/Reduce APIs, RPCs or via the console and web user interfaces.
     For enabling this flag(mapreduce.cluster.acls.enabled), this is to be set
     to true in mapred-site.xml on JobTracker node and on all TaskTracker nodes.
+           是否启用访问控制列表
   </description>
 </property>
 
@@ -1286,6 +1291,7 @@
   <value>10</value>
   <description> The maximum memory that a task tracker allows for the 
     index cache that is used when serving map outputs to reducers.
+    TT用于index cache的最大内存数，index cache在将map输出导入到reduce是使用。
   </description>
 </property>
 
@@ -1295,7 +1301,10 @@
   <description>Whether to write tracking ids of tokens to
     job-conf. When true, the configuration property
     "mapreduce.job.token.tracking.ids" is set to the token-tracking-ids of
-    the job</description>
+    the job
+          是否为 job-conf 写上跟踪标记，为ture时，mapreduce.job.token.tracking.ids属性
+          将设置为此job的追踪id
+    </description>
 </property>
 
 <property>
@@ -1311,6 +1320,7 @@
   <value>10000</value>
   <description> The number of records to process during merge before
    sending a progress notification to the TaskTracker.
+        在发送一个处理通知到TT之前，合并期间处理的记录数。
   </description>
 </property>
 
@@ -1319,6 +1329,7 @@
   <value>0.05</value>
   <description>Fraction of the number of maps in the job which should be 
   complete before reduces are scheduled for the job. 
+     在reduce为此job做准备前，job中的map应完成的比例。
   </description>
 </property>
 
@@ -1327,6 +1338,7 @@
   <value>true</value>
   <description> if false - do not unregister/cancel delegation tokens from 
     renewal, because same tokens may be used by spawned jobs
+         为false时，注册或者不取消续约的令牌代理，因为有些令牌可能被衍生job使用。
   </description>
 </property>
 
@@ -1374,7 +1386,9 @@
   periodicallyrun by the node health monitoring service to determine if
   the node is healthy or not. If the value of this key is empty or the
   file does not exist in the location configured here, the node health
-  monitoring service is not started.</description>
+  monitoring service is not started.
+      节点健康监控程序脚本
+  </description>
 </property>
 
 <property>
@@ -1388,7 +1402,8 @@
   <name>mapreduce.tasktracker.healthchecker.script.timeout</name>
   <value>600000</value>
   <description>Time after node health script should be killed if 
-  unresponsive and considered that the script has failed.</description>
+  unresponsive and considered that the script has failed.
+  </description>
 </property>
 
 <property>
@@ -1407,6 +1422,7 @@
  <name>mapreduce.job.counters.limit</name>
   <value>120</value>
   <description>Limit on the number of user counters allowed per job.
+            job的计数限制大小  如果作业包含大量的counter，会严重降低该作业的性能
   </description>
 </property>
 
@@ -1422,6 +1438,7 @@
   <name>yarn.app.mapreduce.am.staging-dir</name>
   <value>/tmp/hadoop-yarn/staging</value>
   <description>The staging dir used while submitting jobs.
+          client将application定义以及需要的jar包文件等上传到hdfs的指定目录
   </description>
 </property>
 
@@ -1451,7 +1468,9 @@
   <value>0</value>
   <description>The number of times the submitter of the job wants to retry job
     end notification if it fails. This is capped by
-    mapreduce.job.end-notification.max.attempts</description>
+    mapreduce.job.end-notification.max.attempts
+            作业提交者想要重试作业结束通知的次数，此值不会大于mapreduce.job.end-notification.max.attempts
+    </description>
 </property>
 
 <property>
@@ -1490,6 +1509,7 @@
   processes. Example :
   1) A=foo  This will set the env variable A to foo
   2) B=$B:c This is inherit tasktracker's B env variable.  
+        为AM添加环境变量
   </description>
 </property>
 
@@ -1539,7 +1559,9 @@
   <name>yarn.app.mapreduce.am.job.task.listener.thread-count</name>
   <value>30</value>
   <description>The number of threads used to handle RPC calls in the 
-    MR AppMaster from remote tasks</description>
+    MR AppMaster from remote tasks
+    AM用于处理远程task的RPC请求的线程数。
+  </description>
 </property>
 
 <property>
@@ -1554,7 +1576,9 @@
   <name>yarn.app.mapreduce.am.job.committer.cancel-timeout</name>
   <value>60000</value>
   <description>The amount of time in milliseconds to wait for the output
-    committer to cancel an operation if the job is killed</description>
+    committer to cancel an operation if the job is killed
+           如果job被杀死， output committer取消一项操作等待的时间（毫秒）
+  </description>
 </property>
 
 <property>
@@ -1563,34 +1587,45 @@
   <description>Defines a time window in milliseconds for output commit
   operations.  If contact with the RM has occurred within this window then
   commits are allowed, otherwise the AM will not allow output commits until
-  contact with the RM has been re-established.</description>
+  contact with the RM has been re-established.
+      定义一个输出提交操作的时间窗口（毫秒）如果与AM连接发生在这个窗体之内，那么提交
+      被允许，否则AM不允许输出提交操作，直到与Am的连接被重新建立。
+  </description>
 </property>
 
 <property>
   <name>yarn.app.mapreduce.am.scheduler.heartbeat.interval-ms</name>
   <value>1000</value>
   <description>The interval in ms at which the MR AppMaster should send
-    heartbeats to the ResourceManager</description>
+    heartbeats to the ResourceManager
+    AM发送心跳给RM的时间间隔。
+    </description>
 </property>
 
 <property>
   <name>yarn.app.mapreduce.client-am.ipc.max-retries</name>
   <value>3</value>
   <description>The number of client retries to the AM - before reconnecting
-    to the RM to fetch Application Status.</description>
+    to the RM to fetch Application Status.
+        客户端重试连接AM的次数，在重新连接RM以获取App状态之前。
+  </description>
 </property>
 
 <property>
   <name>yarn.app.mapreduce.client.max-retries</name>
   <value>3</value>
   <description>The number of client retries to the RM/HS before
-    throwing exception. This is a layer above the ipc.</description>
+    throwing exception. This is a layer above the ipc.
+           在抛出异常前，客户端尝试连接RM/HS次数。
+  </description>
 </property>
 
 <property>
   <name>yarn.app.mapreduce.am.resource.mb</name>
   <value>1536</value>
-  <description>The amount of memory the MR AppMaster needs.</description>
+  <description>The amount of memory the MR AppMaster needs.
+           AM占用内存大小。
+  </description>
 </property>
 
 <property>
@@ -1623,7 +1658,9 @@
    <name>mapreduce.job.classloader</name>
    <value>false</value>
   <description>Whether to use a separate (isolated) classloader for
-    user classes in the task JVM.</description>
+    user classes in the task JVM.
+           在task JVM中，是否为用户类使用一个单独的（隔离）的类加载器。
+    </description>
 </property>
 
 <property>
@@ -1641,13 +1678,17 @@
 <property>
   <name>mapreduce.jobhistory.address</name>
   <value>0.0.0.0:10020</value>
-  <description>MapReduce JobHistory Server IPC host:port</description>
+  <description>MapReduce JobHistory Server IPC host:port
+         MR的job history  服务的ipc 地址及端口。
+  </description>
 </property>
 
 <property>
   <name>mapreduce.jobhistory.webapp.address</name>
   <value>0.0.0.0:19888</value>
-  <description>MapReduce JobHistory Server Web UI host:port</description>
+  <description>MapReduce JobHistory Server Web UI host:port
+            MR的job history  服务的web界面 地址及端口。
+      </description>
 </property>
 
 <property>
@@ -1655,6 +1696,7 @@
   <description>
     Location of the kerberos keytab file for the MapReduce
     JobHistory Server.
+    MapReduce的JobHistory服务器的keytab文件存储位置。
   </description>
   <value>/etc/security/keytab/jhs.service.keytab</value>
 </property>
@@ -1663,6 +1705,7 @@
   <name>mapreduce.jobhistory.principal</name>
   <description>
     Kerberos principal name for the MapReduce JobHistory Server.
+    MapReduce的JobHistory服务器的Kerberos主体名
   </description>
   <value>jhs/_HOST@REALM.TLD</value>
 </property>
@@ -1705,14 +1748,18 @@
 <property>
   <name>mapreduce.jobhistory.client.thread-count</name>
   <value>10</value>
-  <description>The number of threads to handle client API requests</description>
+  <description>The number of threads to handle client API requests
+          处理客户端请求的线程数
+      </description>
 </property>
 
 <property>
   <name>mapreduce.jobhistory.datestring.cache.size</name>
   <value>200000</value>
   <description>Size of the date string cache. Effects the number of directories
-  which will be scanned to find a job.</description>
+  which will be scanned to find a job.
+      日期字符串的缓存大小。
+  </description>
 </property>
 
 <property>

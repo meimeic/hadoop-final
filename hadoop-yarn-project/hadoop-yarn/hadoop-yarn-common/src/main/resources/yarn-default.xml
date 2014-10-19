@@ -65,19 +65,25 @@
   </property>    
   
   <property>
-    <description>The address of the applications manager interface in the RM.</description>
+    <description>The address of the applications manager interface in the RM.
+           rm对外的ipc地址。
+    </description>
     <name>yarn.resourcemanager.address</name>
     <value>${yarn.resourcemanager.hostname}:8032</value>
   </property>
 
   <property>
-    <description>The number of threads used to handle applications manager requests.</description>
+    <description>The number of threads used to handle applications manager requests.
+                                处理AM请求的线程数。
+    </description>
     <name>yarn.resourcemanager.client.thread-count</name>
     <value>50</value>
   </property>
 
   <property>
-    <description>The expiry interval for application master reporting.</description>
+    <description>The expiry interval for application master reporting.
+        am报告过期的时间间隔。AM向RM心跳的阈值，超过后即认为AM不可用
+    </description>
     <name>yarn.am.liveness-monitor.expiry-interval-ms</name>
     <value>600000</value>
   </property>
@@ -88,13 +94,17 @@
   </property>
 
   <property>
-    <description>The address of the scheduler interface.</description>
+    <description>The address of the scheduler interface.
+              调度器对外的ipc地址。
+    </description>
     <name>yarn.resourcemanager.scheduler.address</name>
     <value>${yarn.resourcemanager.hostname}:8030</value>
   </property>
 
   <property>
-    <description>Number of threads to handle scheduler interface.</description>
+    <description>Number of threads to handle scheduler interface.
+             处理调度用的线程数，RM处理scheduler的线程数
+    </description>
     <name>yarn.resourcemanager.scheduler.client.thread-count</name>
     <value>50</value>
   </property>
@@ -111,13 +121,17 @@
   </property>
 
   <property>
-    <description>The http address of the RM web application.</description>
+    <description>The http address of the RM web application.
+              RM的web访问地址
+     </description>
     <name>yarn.resourcemanager.webapp.address</name>
     <value>${yarn.resourcemanager.hostname}:8088</value>
   </property>
 
   <property>
-    <description>The https adddress of the RM web application.</description>
+    <description>The https adddress of the RM web application.
+        rm的https web访问地址。
+    </description>
     <name>yarn.resourcemanager.webapp.https.address</name>
     <value>${yarn.resourcemanager.hostname}:8090</value>
   </property>
@@ -125,48 +139,60 @@
   <property>
     <name>yarn.resourcemanager.resource-tracker.address</name>
     <value>${yarn.resourcemanager.hostname}:8031</value>
+    <description>RT对外的ipc地址</description>
   </property>
 
   <property>
-    <description>Are acls enabled.</description>
+    <description>Are acls enabled.是否启用ACL</description>
     <name>yarn.acl.enable</name>
     <value>true</value>
   </property>
 
   <property>
-    <description>ACL of who can be admin of the YARN cluster.</description>
+    <description>ACL of who can be admin of the YARN cluster.
+          集群管理员
+    </description>
     <name>yarn.admin.acl</name>
     <value>*</value>
   </property>
 
   <property>
-    <description>The address of the RM admin interface.</description>
+    <description>The address of the RM admin interface.
+            rm admin对外ipc地址
+    </description>
     <name>yarn.resourcemanager.admin.address</name>
     <value>${yarn.resourcemanager.hostname}:8033</value>
   </property>
 
   <property>
-    <description>Number of threads used to handle RM admin interface.</description>
+    <description>Number of threads used to handle RM admin interface.
+              处理rm admin 接口访问的线程数。RM处理RM admin接口的线程数
+    </description>
     <name>yarn.resourcemanager.admin.client.thread-count</name>
     <value>1</value>
   </property>
 
   <property>
-    <description>How often should the RM check that the AM is still alive.</description>
+    <description>How often should the RM check that the AM is still alive.
+             RM检查AM是否存活的时间间隔，RM检查AM是否还存活的频率，默认1分钟
+    </description>
     <name>yarn.resourcemanager.amliveliness-monitor.interval-ms</name>
     <value>1000</value>
   </property>
 
   <property>
     <description>Maximum time to wait to establish connection to
-    ResourceManager.</description>
+         ResourceManager.与RM建立连接的最大等待时间。尝试与RM连接的阈值，默认15分钟
+    </description>
     <name>yarn.resourcemanager.connect.max-wait.ms</name>
     <value>900000</value>
   </property>
 
   <property>
     <description>How often to try connecting to the
-    ResourceManager.</description>
+    ResourceManager.
+          尝试与RM连接的时间间隔。尝试与RM连接的时间间隔，默认30秒
+    </description>
     <name>yarn.resourcemanager.connect.retry-interval.ms</name>
     <value>30000</value>
   </property>
@@ -177,55 +203,74 @@
     its individual maximum number of application attempts via the API, but the
     individual number cannot be more than the global upper bound. If it is,
     the resourcemanager will override it. The default number is set to 2, to
-    allow at least one retry for AM.</description>
+    allow at least one retry for AM.
+        应用失败后尝试运行次数的阈值，
+        这个是全局共享的，每个任务可以通过API单独进行设置，
+        但是不应该超过这个全局的，如果超过，按全局设置为准
+    </description>
     <name>yarn.resourcemanager.am.max-attempts</name>
     <value>2</value>
   </property>
 
   <property>
-    <description>How often to check that containers are still alive. </description>
+    <description>How often to check that containers are still alive. 
+                 RM检查container是否存活的时间间隔，默认10分钟
+    </description>
     <name>yarn.resourcemanager.container.liveness-monitor.interval-ms</name>
     <value>600000</value>
   </property>
 
   <property>
-    <description>The keytab for the resource manager.</description>
+    <description>The keytab for the resource manager.RM的秘钥表</description>
     <name>yarn.resourcemanager.keytab</name>
     <value>/etc/krb5.keytab</value>
   </property>
 
   <property>
-    <description>How long to wait until a node manager is considered dead.</description>
+    <description>How long to wait until a node manager is considered dead.
+                 RM用于验证NM是否死亡的时间间隔，默认10分钟
+    </description>
     <name>yarn.nm.liveness-monitor.expiry-interval-ms</name>
     <value>600000</value>
   </property>
 
   <property>
-    <description>How often to check that node managers are still alive.</description>
+    <description>How often to check that node managers are still alive.
+                 RM用于验证NM是否存在的时间间隔，默认1秒
+    </description>
     <name>yarn.resourcemanager.nm.liveness-monitor.interval-ms</name>
     <value>1000</value>
   </property>
 
   <property>
-    <description>Path to file with nodes to include.</description>
+    <description>Path to file with nodes to include.
+                节点白名单
+    </description>
     <name>yarn.resourcemanager.nodes.include-path</name>
     <value></value>
   </property>
 
   <property>
-    <description>Path to file with nodes to exclude.</description>
+    <description>Path to file with nodes to exclude.
+                  节点黑名单
+    </description>
     <name>yarn.resourcemanager.nodes.exclude-path</name>
     <value></value>
   </property>
 
   <property>
-    <description>Number of threads to handle resource tracker calls.</description>
+    <description>Number of threads to handle resource tracker calls.
+               RM处理resource-tracker请求的线程数
+               RM处理NM RPC请求线程数。
+    </description>
     <name>yarn.resourcemanager.resource-tracker.client.thread-count</name>
     <value>50</value>
   </property>
 
   <property>
-    <description>The class to use as the resource scheduler.</description>
+    <description>The class to use as the resource scheduler.
+                  用于resource scheduler的类。
+    </description>
     <name>yarn.resourcemanager.scheduler.class</name>
     <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler</value>
   </property>
@@ -233,7 +278,9 @@
   <property>
     <description>The minimum allocation for every container request at the RM,
     in MBs. Memory requests lower than this won't take effect,
-    and the specified value will get allocated at minimum.</description>
+    and the specified value will get allocated at minimum.
+             单个container可申请的最少内存（MB）
+    </description>
     <name>yarn.scheduler.minimum-allocation-mb</name>
     <value>1024</value>
   </property>
@@ -241,7 +288,9 @@
   <property>
     <description>The maximum allocation for every container request at the RM,
     in MBs. Memory requests higher than this won't take effect,
-    and will get capped to this value.</description>
+    and will get capped to this value.
+            单个container可申请的最多内存（MB）
+    </description>
     <name>yarn.scheduler.maximum-allocation-mb</name>
     <value>8192</value>
   </property>
@@ -249,7 +298,9 @@
   <property>
     <description>The minimum allocation for every container request at the RM,
     in terms of virtual CPU cores. Requests lower than this won't take effect,
-    and the specified value will get allocated the minimum.</description>
+    and the specified value will get allocated the minimum.
+           单个container可申请的最少虚拟cpu个数
+    </description>
     <name>yarn.scheduler.minimum-allocation-vcores</name>
     <value>1</value>
   </property>
@@ -257,7 +308,9 @@
   <property>
     <description>The maximum allocation for every container request at the RM,
     in terms of virtual CPU cores. Requests higher than this won't take effect,
-    and will get capped to this value.</description>
+    and will get capped to this value.
+            单个container可申请的最多虚拟cpu个数
+    </description>
     <name>yarn.scheduler.maximum-allocation-vcores</name>
     <value>32</value>
   </property>
@@ -270,7 +323,9 @@
   </property>
 
   <property>
-    <description>The class to use as the persistent store.</description>
+    <description>The class to use as the persistent store.
+          RM的持久性存储类。   
+    </description>
     <name>yarn.resourcemanager.store.class</name>
     <value>org.apache.hadoop.yarn.server.resourcemanager.recovery.FileSystemRMStateStore</value>
   </property>
@@ -286,7 +341,9 @@
   </property>
 
   <property>
-    <description>The maximum number of completed applications RM keeps. </description>
+    <description>The maximum number of completed applications RM keeps. 
+              RM保存已完成应用的最大数
+    </description>
     <name>yarn.resourcemanager.max-completed-applications</name>
     <value>10000</value>
   </property>
@@ -317,7 +374,9 @@
   </property>
 
   <property>
-    <description>The heart-beat interval in milliseconds for every NodeManager in the cluster.</description>
+    <description>The heart-beat interval in milliseconds for every NodeManager in the cluster.
+                 NM向RM发送心跳包的时间间隔
+    </description>
     <name>yarn.resourcemanager.nodemanagers.heartbeat-interval-ms</name>
     <value>1000</value>
   </property>
@@ -325,7 +384,9 @@
   <property>
     <description>Enable a set of periodic monitors (specified in
         yarn.resourcemanager.scheduler.monitor.policies) that affect the
-        scheduler.</description>
+        scheduler.
+                      启用了一套定期监测（以yarn.resourcemanager.scheduler.monitor.policies指定），它影响调度器。
+    </description>
     <name>yarn.resourcemanager.scheduler.monitor.enable</name>
     <value>false</value>
   </property>
@@ -333,7 +394,10 @@
   <property>
     <description>The list of SchedulingEditPolicy classes that interact with
         the scheduler. A particular module may be incompatible with the
-        scheduler, other policies, or a configuration of either.</description>
+        scheduler, other policies, or a configuration of either.
+                   与调度器交互的SchedulingEditPolicy类列表。
+                   一个特定的模块可能与调度，其他政策，或两者的配置不兼容。     
+    </description>
     <name>yarn.resourcemanager.scheduler.monitor.policies</name>
     <value>org.apache.hadoop.yarn.server.resourcemanager.monitor.capacity.ProportionalCapacityPreemptionPolicy</value>
   </property>
@@ -352,32 +416,42 @@
   </property>
 
   <property>
-    <description>Environment variables that should be forwarded from the NodeManager's environment to the container's.</description>
+    <description>Environment variables that should be forwarded from the NodeManager's environment to the container's.
+                    从NM向container传递的环境变量   
+    </description>
     <name>yarn.nodemanager.admin-env</name>
     <value>MALLOC_ARENA_MAX=$MALLOC_ARENA_MAX</value>
   </property>
 
   <property>
-    <description>Environment variables that containers may override rather than use NodeManager's default.</description>
+    <description>Environment variables that containers may override rather than use NodeManager's default.
+                   container可能覆盖NM那里传来的环境变量
+    </description>
     <name>yarn.nodemanager.env-whitelist</name>
     <value>JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,HADOOP_YARN_HOME</value>
   </property>
 
   <property>
-    <description>who will execute(launch) the containers.</description>
+    <description>who will execute(launch) the containers.
+                   执行 container的类
+    </description>
     <name>yarn.nodemanager.container-executor.class</name>
     <value>org.apache.hadoop.yarn.server.nodemanager.DefaultContainerExecutor</value>
 <!--<value>org.apache.hadoop.yarn.server.nodemanager.LinuxContainerExecutor</value>-->
   </property>
 
   <property>
-    <description>Number of threads container manager uses.</description>
+    <description>Number of threads container manager uses.
+                 container manager使用的线程数
+    </description>
     <name>yarn.nodemanager.container-manager.thread-count</name>
     <value>20</value>
   </property>
 
   <property>
-    <description>Number of threads used in cleanup.</description>
+    <description>Number of threads used in cleanup.
+                                           在cleanup阶段使用的线程数
+    </description>
     <name>yarn.nodemanager.delete.thread-count</name>
     <value>4</value>
   </property>
@@ -397,6 +471,10 @@
       the yarn.nodemanager.local-dirs property (see below), and the roots
       of the Yarn applications' log directories is configurable with the 
       yarn.nodemanager.log-dirs property (see also below).
+                 在一个app完成后，NM的DeletionService删除这个任务localized文件目录与日志目录的时间间隔。
+                 如果进行调试，可把这个值设置的大些，重启NM后生效。
+       yarn程序的工作目录根目录由yarn.nodemanager.local-dirs属性配置，
+       yarn程序的日志目录根目录由yarn.nodemanager.log-dirs属性配置。
     </description>
     <name>yarn.nodemanager.delete.debug-delay-sec</name>
     <value>0</value>
@@ -414,6 +492,7 @@
       ${yarn.nodemanager.local-dirs}/usercache/${user}/appcache/application_${appid}.
       Individual containers' work directories, called container_${contid}, will
       be subdirectories of this.
+      NM存放临时文件的本地目录。
    </description>
     <name>yarn.nodemanager.local-dirs</name>
     <value>${hadoop.tmp.dir}/nm-local-dir</value>
@@ -433,37 +512,50 @@
       until it becomes full. If a file is removed from a sub-directory that
       is marked full, then that sub-directory will be used back again to
       localize files.
+                    这个参数限制本地文件夹中可以写入的最多文件数。
+                    如果超过了这个阈值，会创建子文件夹，新的文件会放在那里。
+                    如果小于36,NM就不能启动
    </description>
     <name>yarn.nodemanager.local-cache.max-files-per-directory</name>
     <value>8192</value>
   </property>
 
   <property>
-    <description>Address where the localizer IPC is.</description>
+    <description>Address where the localizer IPC is.
+                  本地ipc地址。
+    </description>
     <name>yarn.nodemanager.localizer.address</name>
     <value>${yarn.nodemanager.hostname}:8040</value>
   </property>
 
   <property>
-    <description>Interval in between cache cleanups.</description>
+    <description>Interval in between cache cleanups.
+                  cache cleanup的时间间隔。默认10分钟
+    </description>
     <name>yarn.nodemanager.localizer.cache.cleanup.interval-ms</name>
     <value>600000</value>
   </property>
 
   <property>
-    <description>Target size of localizer cache in MB, per local directory.</description>
+    <description>Target size of localizer cache in MB, per local directory.
+                                            每个本地文件夹下的容量阈值，默认为10G。
+    </description>
     <name>yarn.nodemanager.localizer.cache.target-size-mb</name>
     <value>10240</value>
   </property>
 
   <property>
-    <description>Number of threads to handle localization requests.</description>
+    <description>Number of threads to handle localization requests.
+                  处理localization请求的线程数
+    </description>
     <name>yarn.nodemanager.localizer.client.thread-count</name>
     <value>5</value>
   </property>
 
   <property>
-    <description>Number of threads to use for localization fetching.</description>
+    <description>Number of threads to use for localization fetching.
+                  localization fetching的线程数。
+    </description>
     <name>yarn.nodemanager.localizer.fetch.thread-count</name>
     <value>4</value>
   </property>
@@ -475,20 +567,26 @@
       Individual containers' log directories will be below this, in directories 
       named container_{$contid}. Each container directory will contain the files
       stderr, stdin, and syslog generated by that container.
+        NM存放counter日志的本地目录。
     </description>
     <name>yarn.nodemanager.log-dirs</name>
     <value>${yarn.log.dir}/userlogs</value>
   </property>
 
   <property>
-    <description>Whether to enable log aggregation</description>
+    <description>Whether to enable log aggregation
+                是否启用日志集聚功能。
+    </description>
     <name>yarn.log-aggregation-enable</name>
     <value>false</value>
   </property>
 
   <property>
     <description>How long to keep aggregation logs before deleting them.  -1 disables. 
-    Be careful set this too small and you will spam the name node.</description>
+    Be careful set this too small and you will spam the name node.
+      log aggregation保留时间，-1表示永远保留。
+                如果这个值很小，会加重NN的负担
+    </description>
     <name>yarn.log-aggregation.retain-seconds</name>
     <value>-1</value>
   </property> 
@@ -497,7 +595,10 @@
     <description>How long to wait between aggregated log retention checks.
     If set to 0 or a negative value then the value is computed as one-tenth
     of the aggregated log retention time. Be careful set this too small and
-    you will spam the name node.</description>
+    you will spam the name node.
+     aggregated log retention checks的间隔。
+              如果设置为0或一个负数，这个值默认是 aggregated log保留时间的十分之一
+    </description>
     <name>yarn.log-aggregation.retain-check-interval-seconds</name>
     <value>-1</value>
   </property>
@@ -505,6 +606,8 @@
   <property>
     <description>Time in seconds to retain user logs. Only applicable if
     log aggregation is disabled
+            保留user logs的时间
+            当log aggregation禁用时有效。
     </description>
     <name>yarn.nodemanager.log.retain-seconds</name>
     <value>10800</value>
@@ -525,21 +628,27 @@
 
   <property>
     <description>Amount of physical memory, in MB, that can be allocated 
-    for containers.</description>
+    for containers.
+     NM上可用内存量。
+    </description>
     <name>yarn.nodemanager.resource.memory-mb</name>
     <value>8192</value>
   </property>
 
   <property>
     <description>Whether physical memory limits will be enforced for
-    containers.</description>
+    containers.
+            是否限制container的物理内存极限值
+    </description>
     <name>yarn.nodemanager.pmem-check-enabled</name>
     <value>true</value>
   </property>
 
   <property>
     <description>Whether virtual memory limits will be enforced for
-    containers.</description>
+    containers.
+           是否限制container的虚拟内存极限值
+    </description>
     <name>yarn.nodemanager.vmem-check-enabled</name>
     <value>true</value>
   </property>
@@ -549,6 +658,9 @@
     setting memory limits for containers. Container allocations are
     expressed in terms of physical memory, and virtual memory usage
     is allowed to exceed this allocation by this ratio.
+             当container设置了内存限制后，
+             虚拟内存与物理内存的比率
+     container基于物理内存分配，虚拟内存可以超过这个
     </description>
     <name>yarn.nodemanager.vmem-pmem-ratio</name>
     <value>2.1</value>
@@ -556,7 +668,9 @@
 
   <property>
     <description>Number of CPU cores that can be allocated 
-    for containers.</description>
+    for containers.
+    NM上可用虚拟cup数。
+    </description>
     <name>yarn.nodemanager.resource.cpu-vcores</name>
     <value>8</value>
   </property>
@@ -568,42 +682,55 @@
   </property>
 
   <property>
-    <description>How often to monitor containers.</description>
+    <description>How often to monitor containers.
+           检测container的时间间隔，默认3秒
+    </description>
     <name>yarn.nodemanager.container-monitor.interval-ms</name>
     <value>3000</value>
   </property>
 
   <property>
-    <description>Class that calculates containers current resource utilization.</description>
+    <description>Class that calculates containers current resource utilization.
+           用来计算当前counter利用率的类。
+    </description>
     <name>yarn.nodemanager.container-monitor.resource-calculator.class</name>
   </property>
 
   <property>
-    <description>Frequency of running node health script.</description>
+    <description>Frequency of running node health script.
+            运行node health脚本的频率，默认10分钟
+    </description>
     <name>yarn.nodemanager.health-checker.interval-ms</name>
     <value>600000</value>
   </property>
 
   <property>
-    <description>Script time out period.</description>
+    <description>Script time out period.
+                 node health脚本过期阈值，默认20分钟
+    </description>
     <name>yarn.nodemanager.health-checker.script.timeout-ms</name>
     <value>1200000</value>
   </property>
 
   <property>
-    <description>The health check script to run.</description>
+    <description>The health check script to run.指定运行的node health脚本路径。
+    </description>
     <name>yarn.nodemanager.health-checker.script.path</name>
     <value></value>
   </property>
 
   <property>
-    <description>The arguments to pass to the health check script.</description>
+    <description>The arguments to pass to the health check script.
+                    传递给node health脚本的参数
+    </description>
     <name>yarn.nodemanager.health-checker.script.opts</name>
     <value></value>
   </property>
 
   <property>
-    <description>Frequency of running disk health checker code.</description>
+    <description>Frequency of running disk health checker code.
+              进行磁盘健康检查的时间间隔
+    </description>
     <name>yarn.nodemanager.disk-health-checker.interval-ms</name>
     <value>120000</value>
   </property>
@@ -613,7 +740,11 @@
     nodemanager to launch new containers. This correspond to both
     yarn-nodemanager.local-dirs and yarn.nodemanager.log-dirs. i.e. If there
     are less number of healthy local-dirs (or log-dirs) available, then
-    new containers will not be launched on this node.</description>
+    new containers will not be launched on this node.
+    NM启动新container时，所要求的健康磁盘的最小fraction。
+          这与yarn-nodemanager.local-dirs及yarn.nodemanager.log-dirs相关。
+          若健康的local-dirs (or log-dirs)少于预期数，则不在此节点启动counter
+    </description>
     <name>yarn.nodemanager.disk-health-checker.min-healthy-disks</name>
     <value>0.25</value>
   </property>
@@ -657,7 +788,9 @@
   </property>
 
   <property>
-    <description>T-file compression types used to compress aggregated logs.</description>
+    <description>T-file compression types used to compress aggregated logs.
+          聚合日志压缩类型。
+    </description>
     <name>yarn.nodemanager.log-aggregation.compression-type</name>
     <value>none</value>
   </property>
@@ -676,13 +809,17 @@
   </property>
 
   <property>
-    <description>No. of ms to wait between sending a SIGTERM and SIGKILL to a container</description>
+    <description>No. of ms to wait between sending a SIGTERM and SIGKILL to a container
+             给container发送SIGTERM与SIGKILL的时间间隔
+    </description>
     <name>yarn.nodemanager.sleep-delay-before-sigkill.ms</name>
     <value>250</value>
   </property>
 
   <property>
-    <description>Max time to wait for a process to come up when trying to cleanup a container</description>
+    <description>Max time to wait for a process to come up when trying to cleanup a container
+         当尝试去清除container时，等待process的最大时间。
+    </description>
     <name>yarn.nodemanager.process-kill-wait.ms</name>
     <value>2000</value>
   </property>
@@ -690,20 +827,28 @@
   <property>
     <description>Max time, in seconds, to wait to establish a connection to RM when NM starts.
     The NM will shutdown if it cannot connect to RM within the specified max time period.
-    If the value is set as -1, then NM will retry forever.</description>
+    If the value is set as -1, then NM will retry forever.
+           当NM启动时，向RM建立连接的最大时限，默认为9秒，
+           如果在最大时限内不能连接到RM，NM会启动失败。
+           如果设置为-1,NM将会一直去连接RM
+    </description>
     <name>yarn.nodemanager.resourcemanager.connect.wait.secs</name>
     <value>900</value>
   </property>
 
   <property>
-    <description>Time interval, in seconds, between each NM attempt to connect to RM.</description>
+    <description>Time interval, in seconds, between each NM attempt to connect to RM.
+                 NM尝试与RM连接的时间间隔
+    </description>
     <name>yarn.nodemanager.resourcemanager.connect.retry_interval.secs</name>
     <value>30</value>
   </property>
 
   <property>
     <description>Max number of threads in NMClientAsync to process container
-    management events</description>
+    management events
+                在NMClientAsync中去处理container management事件的最大线程数
+    </description>
     <name>yarn.client.nodemanager-client-async.thread-pool-max-size</name>
     <value>500</value>
   </property>
@@ -721,6 +866,8 @@
       connection should be closed in order to use newer token. This and
       (yarn.client.nodemanager-client-async.thread-pool-max-size) are related
       and should be sync (no need for them to be equal).
+      proxy connection到NM的最大连接数，这个数必须大于1。
+      NMClient与MRAppMaster通过这个缓存到NM的连接
   	</description>
   	<name>yarn.client.max-nodemanagers-proxies</name>
   	<value>500</value>
@@ -776,7 +923,9 @@
   <!-- Other configuration -->
   <property>
     <description>The interval of the yarn client's querying application state
-    after application submission. The unit is millisecond.</description>
+    after application submission. The unit is millisecond.
+    yarn的客户端去查询application client protocol的异步API的执行进度
+    </description>
     <name>yarn.client.app-submission.poll-interval</name>
     <value>1000</value>
   </property>
