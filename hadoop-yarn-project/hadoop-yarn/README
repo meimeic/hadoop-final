@@ -43,7 +43,7 @@ NetBeans has builtin support of maven projects. Just "Open Project..."
 and everything is setup automatically. Verified with NetBeans 6.9.1.
 
 
-Custom Hadoop Dependencies
+Custom Hadoop Dependencies 定制依赖
 --------------------------
 
 By default Hadoop dependencies are specified in the top-level pom.xml
@@ -51,15 +51,15 @@ properties section. One can override them via -Dhadoop-common.version=...
 on the command line. ~/.m2/settings.xml can also be used to specify
 these properties in different profiles, which is useful for IDEs.
 
-Modules
+Modules 模块
 -------
 YARN consists of multiple modules. The modules are listed below as per the directory structure:
 
-hadoop-yarn-api - Yarn's cross platform external interface
+hadoop-yarn-api - Yarn's cross platform external interface  Yarn的跨平台外部接口
 
-hadoop-yarn-common - Utilities which can be used by yarn clients and server
+hadoop-yarn-common - Utilities which can be used by yarn clients and server 公共部分
 
-hadoop-yarn-server - Implementation of the hadoop-yarn-api
+hadoop-yarn-server - Implementation of the hadoop-yarn-api  api的实现
 	hadoop-yarn-server-common - APIs shared between resourcemanager and nodemanager
 	hadoop-yarn-server-nodemanager (TaskTracker replacement)
 	hadoop-yarn-server-resourcemanager (JobTracker replacement)
