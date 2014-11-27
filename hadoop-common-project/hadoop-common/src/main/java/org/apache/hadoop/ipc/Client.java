@@ -105,6 +105,8 @@ public class Client {
   public static final Log LOG = LogFactory.getLog(Client.class);
 
   /** A counter for generating call IDs. */
+  
+  
   private static final AtomicInteger callIdCounter = new AtomicInteger();
 
   private static final ThreadLocal<Integer> callId = new ThreadLocal<Integer>();
