@@ -83,10 +83,15 @@ public class WritableRpcEngine implements RpcEngine {
   
   /** A method invocation, including the method name and its parameters.*/
   private static class Invocation implements Writable, Configurable {
+	//方法名
     private String methodName;
+    //参数类型
     private Class<?>[] parameterClasses;
+    //参数
     private Object[] parameters;
+    //配置
     private Configuration conf;
+    //客户端版本
     private long clientVersion;
     private int clientMethodsHash;
     private String declaringClassProtocolName;
