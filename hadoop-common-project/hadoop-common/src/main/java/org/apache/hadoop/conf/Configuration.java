@@ -67,19 +67,26 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.apache.hadoop.classification.InterfaceAudience;
 import org.apache.hadoop.classification.InterfaceStability;
+
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
+
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableUtils;
+
 import org.apache.hadoop.net.NetUtils;
+
 import org.apache.hadoop.util.ReflectionUtils;
 import org.apache.hadoop.util.StringInterner;
 import org.apache.hadoop.util.StringUtils;
+
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
+
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -87,6 +94,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
+
 import com.google.common.base.Preconditions;
 
 /** 
@@ -169,7 +177,7 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
     LogFactory.getLog("org.apache.hadoop.conf.Configuration.deprecation");
 
   private boolean quietmode = true;
-  
+  //内部静态类 用于表示资源
   private static class Resource {
     private final Object resource;
     private final String name;
@@ -199,6 +207,7 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
   
   /**
    * List of configuration resources.
+   * 配置资源文件数组。
    */
   private ArrayList<Resource> resources = new ArrayList<Resource>();
   
@@ -213,11 +222,12 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
    * List of configuration parameters marked <b>final</b>. 
    */
   private Set<String> finalParameters = new HashSet<String>();
-  
+  //是否加载默认资源
   private boolean loadDefaults = true;
   
   /**
    * Configuration objects
+   * 系统中所有的configuration对象
    */
   private static final WeakHashMap<Configuration,Object> REGISTRY = 
     new WeakHashMap<Configuration,Object>();
@@ -225,6 +235,7 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
   /**
    * List of default Resources. Resources are loaded in the order of the list 
    * entries
+   * 写加锁的默认资源数组
    */
   private static final CopyOnWriteArrayList<String> defaultResources =
     new CopyOnWriteArrayList<String>();
@@ -253,6 +264,7 @@ public class Configuration implements Iterable<Map.Entry<String,String>>,
    * that is being replaced. It also provides method to get the appropriate
    * warning message which can be logged whenever the deprecated key is used.
    */
+  //已废弃键的信息类。
   private static class DeprecatedKeyInfo {
     private String[] newKeys;
     private String customMessage;
