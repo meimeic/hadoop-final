@@ -36,6 +36,7 @@ import org.apache.hadoop.security.token.TokenIdentifier;
 public interface RpcEngine {
 
   /** Construct a client-side proxy object. 
+   * 该方法返回一个协议代理类实例
    * @param <T>*/
   <T> ProtocolProxy<T> getProxy(Class<T> protocol,
                   long clientVersion, InetSocketAddress addr,

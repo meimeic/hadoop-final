@@ -83,16 +83,14 @@ public class WritableRpcEngine implements RpcEngine {
   
   /** A method invocation, including the method name and its parameters.*/
   private static class Invocation implements Writable, Configurable {
-	//方法名
-    private String methodName;
-    //参数类型
+	//鏂规硶鍚�    private String methodName;
+    //鍙傛暟绫诲瀷
     private Class<?>[] parameterClasses;
-    //参数
+    //鍙傛暟
     private Object[] parameters;
-    //配置
+    //閰嶇疆
     private Configuration conf;
-    //客户端版本
-    private long clientVersion;
+    //瀹㈡埛绔増鏈�    private long clientVersion;
     private int clientMethodsHash;
     private String declaringClassProtocolName;
     
@@ -108,6 +106,7 @@ public class WritableRpcEngine implements RpcEngine {
       this.parameterClasses = method.getParameterTypes();
       this.parameters = parameters;
       rpcVersion = writableRpcVersion;
+      //检测版本的方法
       if (method.getDeclaringClass().equals(VersionedProtocol.class)) {
         //VersionedProtocol is exempted from version check.
         clientVersion = 0;
@@ -279,7 +278,7 @@ public class WritableRpcEngine implements RpcEngine {
       throw new UnsupportedOperationException(
           "Not supported: connectionRetryPolicy=" + connectionRetryPolicy);
     }
-
+    //创建代理实例
     T proxy = (T) Proxy.newProxyInstance(protocol.getClassLoader(),
         new Class[] { protocol }, new Invoker(protocol, addr, ticket, conf,
             factory, rpcTimeout));
