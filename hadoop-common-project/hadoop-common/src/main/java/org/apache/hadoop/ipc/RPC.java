@@ -76,6 +76,7 @@ import com.google.protobuf.BlockingService;
  */
 public class RPC {
   final static int RPC_SERVICE_CLASS_DEFAULT = 0;
+  //定义rpc枚举类
   public enum RpcKind {
     RPC_BUILTIN ((short) 1),         // Used for built in calls by tests
     RPC_WRITABLE ((short) 2),        // Use WritableRpcEngine 
@@ -91,6 +92,7 @@ public class RPC {
   interface RpcInvoker {   
     /**
      * Process a client call on the server side
+     * 处理一个客户端的call，在服务端
      * @param server the server within whose context this rpc call is made
      * @param protocol - the protocol name (the class of the client proxy
      *      used to make calls to the rpc server.
@@ -107,6 +109,7 @@ public class RPC {
   
   /**
    * Get all superInterfaces that extend VersionedProtocol
+   * 用于获取继承VersionedProtocol的顶级接口
    * @param childInterfaces
    * @return the super interfaces that extend VersionedProtocol
    */
