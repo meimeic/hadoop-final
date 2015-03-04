@@ -121,7 +121,7 @@ public class Client {
     callId.set(cid);
     retryCount.set(rc);
   }
-
+//保存connectionId到connection的映射
   private Hashtable<ConnectionId, Connection> connections =
     new Hashtable<ConnectionId, Connection>();
 
@@ -314,19 +314,19 @@ public class Client {
    * socket connected to a remote address.  Calls are multiplexed through this
    * socket: responses may be delivered out of order. */
   private class Connection extends Thread {
-    private InetSocketAddress server;             // server ip:port
-    private final ConnectionId remoteId;                // connection id
+    private InetSocketAddress server;             // server ip:port 服务器地址
+    private final ConnectionId remoteId;                // connection id 连接标识
     private AuthMethod authMethod; // authentication method
     private AuthProtocol authProtocol;
     private int serviceClass;
     private SaslRpcClient saslRpcClient;
     
-    private Socket socket = null;                 // connected socket
+    private Socket socket = null;                 // 连接的 socket 对象
     private DataInputStream in;
     private DataOutputStream out;
     private int rpcTimeout;
     private int maxIdleTime; //connections will be culled if it was idle for 
-    //maxIdleTime msecs
+    //maxIdleTime msecs 连接将被杀死，如果空闲时间超过maxIdleTime毫秒。
     private final RetryPolicy connectionRetryPolicy;
     private int maxRetriesOnSocketTimeouts;
     private boolean tcpNoDelay; // if T then disable Nagle's Algorithm
@@ -392,6 +392,7 @@ public class Client {
     }
 
     /**
+     * 将call对象放入正常运行的connection对象的hashtable中。
      * Add a call to this connection's call queue and notify
      * a listener; synchronized.
      * Returns false if called during shutdown.
@@ -402,7 +403,7 @@ public class Client {
       if (shouldCloseConnection.get())
         return false;
       calls.put(call.id, call);
-      notify();
+      notify();//唤醒等待该方法的一个进程。
       return true;
     }
 
@@ -522,6 +523,7 @@ public class Client {
       short timeoutFailures = 0;
       while (true) {
         try {
+        	//创建socket实例，并设置其工作模式
           this.socket = socketFactory.createSocket();
           this.socket.setTcpNoDelay(tcpNoDelay);
           
@@ -530,6 +532,7 @@ public class Client {
            * client, to ensure Server matching address of the client connection
            * to host name in principal passed.
            */
+          //获取连接标识的用户信息。
           UserGroupInformation ticket = remoteId.getTicket();
           if (ticket != null && ticket.hasKerberosCredentials()) {
             KerberosInfo krbInfo = 
@@ -630,6 +633,7 @@ public class Client {
      * the connection thread that waits for responses.
      */
     private synchronized void setupIOstreams() {
+    	//如果connection.socket对象不为空或者connection正处于关闭阶段直接返回。
       if (socket != null || shouldCloseConnection.get()) {
         return;
       } 

@@ -1142,8 +1142,8 @@ public abstract class Server {
 
   /** Reads calls from a connection and queues them for handling. */
   public class Connection {
-    private boolean connectionHeaderRead = false; // connection  header is read?
-    private boolean connectionContextRead = false; //if connection context that
+    private boolean connectionHeaderRead = false; // connection header is read?连接头是否已阅读
+    private boolean connectionContextRead = false; //if connection context that连接内容是否已阅读
                                             //follows connection header is read
 
     private SocketChannel channel;
