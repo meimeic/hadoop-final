@@ -23,22 +23,32 @@
     <version>2.2.0</version>
     <relativePath>../../hadoop-project-dist</relativePath>
   </parent>
+  <!-- 定义项目所属组-->
   <groupId>org.apache.hadoop</groupId>
+  <!-- 项目在组中的唯一ID,一个组可能有多个项目用ID分区 -->
   <artifactId>hadoop-common</artifactId>
+  <!-- 项目版本，格式为:主版本.次版本.增量版本-限定版本号-->
   <version>2.2.0</version>
+  <!-- 项目的详细描述, Maven 产生的文档用。
+        当这个元素能够用HTML格式描述时（例如，CDATA中的文本会被解析器忽略，就可以包含HTML标签）， 
+        不鼓励使用纯文本描述。如果你需要修改产生的web站点的索引页面，你应该修改你自己的索引页文件，
+        而不是调整这里的文档。 -->
   <description>Apache Hadoop Common</description>
+  <!-- 项目名 -->
   <name>Apache Hadoop Common</name>
+  <!-- 项目产生的构件类型，例如jar、war、ear、pom。插件可以创建他们自己的构件类型，所以前面列的不是全部构件类型 -->
   <packaging>jar</packaging>
 
   <properties>
     <hadoop.component>common</hadoop.component>
     <is.hadoop.component>true</is.hadoop.component>
   </properties>
-
+<!-- 添加依赖 -->
   <dependencies>
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-annotations</artifactId>
+      <!-- 定义依赖范围 -->
       <scope>compile</scope>
     </dependency>
     <dependency>
